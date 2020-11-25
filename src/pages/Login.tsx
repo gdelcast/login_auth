@@ -82,9 +82,7 @@ const Login: React.FC = () => {
                    /*'Access-Control-Allow-Credentials': 'true',
                     'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,OPTIONS',
                     'Access-Control-Allow-Headers' : 'Origin, Content-Type, Accept, Authorization,X-Requested-With',
-                   
                    mode:'no-cors'*/
-                   
           },
 
          body: JSON.stringify(loginData)
@@ -96,7 +94,7 @@ const Login: React.FC = () => {
         })
         .catch(error => {
                   console.error('Error: ', error);
-                  setMessage(error);
+                  setMessage('Failed to connect to AIS ' + error);
                   setIserror(true);
         });
         
