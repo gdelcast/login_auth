@@ -7,13 +7,16 @@ import { useHistory } from "react-router-dom";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 
 function validateEmail(email: string) {
-    const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
+//  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
+    const re = /[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/;
     return re.test(String(email).toLowerCase());
 }
 const Login: React.FC = () => {
   const history = useHistory();
-  const [email, setEmail] = useState<string>("eve.holt@reqres.in");
-  const [password, setPassword] = useState<string>("cityslicka");
+  //const [email, setEmail] = useState<string>("eve.holt@reqres.in");
+  const [email, setEmail] = useState<string>("gdelcastil");
+  //const [password, setPassword] = useState<string>("cityslicka");
+  const [password, setPassword] = useState<string>("jdedoc");
   const [iserror, setIserror] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const handleLogin = () => {
@@ -35,22 +38,74 @@ const Login: React.FC = () => {
     }
 
     const loginData = {
-        "email": email,
+        "username": email,
         "password": password
     }
 
+/*
     const api = axios.create({
-        baseURL: `https://reqres.in/api`
+//      baseURL: `https://reqres.in/api`
+      headers: { 
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,OPTIONS',
+        'Access-Control-Allow-Headers' : 'Origin, Content-Type, Accept, Authorization,X-Requested-With',
+        'Content-Type': 'application/json',
+        'mode' : 'no-cors',
+      },
+      //baseURL: `http://10.1.252.3:5000/jderest/v2`
+      baseURL: `http://10.1.4.9:8180/jderest/v2`
     })
-    api.post("/login", loginData)
+    
+    //api.post("/login", loginData)
+    api.post("/tokenrequest", loginData)
         .then(res => {             
-            history.push("/dashboard/" + email);
-         })
-         .catch(error=>{
-            setMessage("Auth failure! Please create an account");
+            //history.push("/dashboard/" + email);
+            console.log(res);
+            setMessage(res.data.userInfo.token);
             setIserror(true)
          })
+         .catch(error=>{
+            console.log(error.message);
+            setMessage(error.message);
+            setIserror(true)
+         })
+         */
+
+        
+        //fetch('http://localhost:5000/jderest/v2/tokenrequest', {
+        fetch('http://10.1.4.9:8180/jderest/v2/tokenrequest', {
+          method: 'POST',
+          headers: {
+                   'Access-Control-Allow-Origin': '*',
+                   'Content-Type': 'application/json',
+                   /*'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers' : 'Origin, Content-Type, Accept, Authorization,X-Requested-With',
+                   
+                   mode:'no-cors'*/
+                   
+          },
+
+         body: JSON.stringify(loginData)
+         }).then((response) => response.json())
+         .then((responseJson) => {
+                   console.log(responseJson);
+                   setMessage(responseJson.userInfo.token);
+                   setIserror(true);
+        })
+        .catch(error => {
+                  console.error('Error: ', error);
+                  setMessage(error);
+                  setIserror(true);
+        });
+        
+
+
   };
+
+
+
 
   return (
     <IonPage>
@@ -111,11 +166,11 @@ const Login: React.FC = () => {
           <IonRow>
             <IonCol>
               <p style={{ fontSize: "small" }}>
-                  By clicking LOGIN you agree to our <a href="#">Policy</a>
+                  By clicking LOGIN you agree to our <a href="/#">Policy</a>
               </p>
               <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
               <p style={{ fontSize: "medium" }}>
-                  Don't have an account? <a href="#">Sign up!</a>
+                  Don't have an account? <a href="/#">Sign up!</a>
               </p>
 
             </IonCol>
