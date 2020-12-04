@@ -14,10 +14,10 @@ function validateEmail(email: string) {
 }
 const Login: React.FC = () => {
   const history = useHistory();
-  //const [email, setEmail] = useState<string>("eve.holt@reqres.in");
-  const [email, setEmail] = useState<string>("gdelcastil");
-  //const [password, setPassword] = useState<string>("cityslicka");
-  const [password, setPassword] = useState<string>("jdedoc");
+  //const [email, setEmail] = useState<string>("gdelcastil");
+  //const [password, setPassword] = useState<string>("jdedoc");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [iserror, setIserror] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const handleLogin = () => {
